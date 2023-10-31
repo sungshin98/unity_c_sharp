@@ -1,43 +1,43 @@
 using UnityEngine;
 
-public class GearRotation : MonoBehaviour
+public class ShrinkOverTime : MonoBehaviour
 {
-    public float rotationSpeed = 30.0f; // 톱니 회전 속도 (각도/초)
-    public float radius = 1.0f; // 반지름
-    public int numTeeth = 10; // 톱니 이빨 수
-    public Material lineMaterial; // 원을 그릴 데 사용할 머티리얼
-
-    private LineRenderer lineRenderer;
-    private float currentAngle = 0.0f;
+    public float shrinkInterval = 2.0f; // 크기를 줄이는 주기 (초)
+    private float initialScale;
+    private float timeSinceLastShrink;
+    private float targetScale;
 
     void Start()
     {
-        lineRenderer = gameObject.AddComponent<LineRenderer>();
-        lineRenderer.material = lineMaterial;
-        lineRenderer.startWidth = 0.1f;
-        lineRenderer.endWidth = 0.1f;
-        lineRenderer.positionCount = numTeeth + 1;
+        initialScale = transform.localScale.x; // 또는 원하는 축의 크기로 설정
+        targetScale = initialScale * 0.3f; // 기존 크기의 10%
+        timeSinceLastShrink = 0.0f;
     }
 
     void Update()
     {
-        currentAngle += rotationSpeed * Time.deltaTime;
-        transform.rotation = Quaternion.Euler(0, 0, currentAngle);
+        timeSinceLastShrink += Time.deltaTime;
 
-        DrawGear();
+        if (transform.localScale.x > targetScale)
+        {
+            if (timeSinceLastShrink >= shrinkInterval)
+            {
+                timeSinceLastShrink = 0.0f;
+                Shrink();
+            }
+        }
     }
 
-    void DrawGear()
+    void Shrink()
     {
-        float angleIncrement = 360.0f / numTeeth;
+        float newScale = transform.localScale.x - (initialScale * 0.1f);
+        transform.localScale = new Vector3(newScale, newScale, newScale);
 
-        for (int i = 0; i <= numTeeth; i++)
+        if (newScale <= targetScale)
         {
-            float angle = i * angleIncrement;
-            float x = Mathf.Cos(Mathf.Deg2Rad * angle) * radius;
-            float y = Mathf.Sin(Mathf.Deg2Rad * angle) * radius;
-            Vector3 position = new Vector3(x, y, 0);
-            lineRenderer.SetPosition(i, position);
+            // 크기가 목표 크기 (기존 크기의 10%) 이하로 떨어졌을 때 축소 중단
+            transform.localScale = new Vector3(targetScale, targetScale, targetScale);
+            enabled = false; // 이 스크립트 비활성화
         }
     }
 }
