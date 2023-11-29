@@ -10,7 +10,7 @@ Material:
   m_Name: floor-wall-metal-tile
   m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
   m_Parent: {fileID: 2100000, guid: ec8d550ab293c7948bb0f64ce4ad6b01, type: 2}
-  m_ModifiedSerializedProperties: 0
+  m_ModifiedSerializedProperties: 16
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -33,6 +33,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Metallic: 0
+    - _Metallic: 1
+    - _UVSec: 0
     m_Colors: []
   m_BuildTextureStacks: []
